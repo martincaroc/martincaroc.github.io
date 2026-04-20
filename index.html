@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Martín Caro | QA & Game Dev</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Code Pro', 'Courier New', monospace;
+            background: #0f0c1e;
+            min-height: 100vh;
+            color: #fff;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.06) 2px, transparent 3px);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            gap: 8px;
+            background: rgba(22, 27, 51, 0.8);
+            padding: 6px 10px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            border: 1px solid #ffb000;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: #aaa;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 20px;
+            transition: all 0.3s;
+            font-family: 'Source Code Pro', monospace;
+        }
+
+        .lang-btn.active {
+            background: #ffb000;
+            color: #161b33;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2.5rem 1rem 1.5rem;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.3rem;
+            background: linear-gradient(90deg, #ffb000, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contact-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 10px 0;
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+
+        .badge-container {
+            margin-top: 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0 4px;
+            font-family: 'Source Code Pro', monospace;
+            text-transform: uppercase;
+        }
+
+        .badge.qa {
+            background: rgba(112, 137, 227, 0.15);
+            color: #7089e3;
+            border: 1px solid rgba(112, 137, 227, 0.4);
+        }
+
+        .badge.gamedev {
+            background: rgba(255, 176, 0, 0.15);
+            color: #ffb000;
+            border: 1px solid rgba(255, 176, 0, 0.4);
+        }
+
+        .quick-links {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .quick-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #161b33;
+            border-radius: 30px;
+            text-decoration: none;
+            color: #ffb000;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 176, 0, 0.3);
+            transition: all 0.2s;
+            backdrop-filter: blur(5px);
+        }
+
+        .quick-link:hover {
+            background: rgba(255, 140, 0, 0.15);
+            border-color: #ff8c00;
+            color: #ff8c00;
+            transform: translateY(-2px);
+        }
+
+        .quick-link.email-link {
+            border-color: rgba(112, 137, 227, 0.3);
+            color: #7089e3;
+        }
+
+        .quick-link.email-link:hover {
+            background: rgba(112, 137, 227, 0.15);
+            border-color: #7089e3;
+            color: #8a9eff;
+        }
+
+        .split-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .panel {
+            flex: 1 1 45%;
+            min-width: 320px;
+            background: #161b33;
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .panel.qa {
+            border-top: 4px solid #7089e3;
+        }
+
+        .panel.gamedev {
+            border-top: 4px solid #ffb000;
+        }
+
+        .panel h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            font-family: 'Source Code Pro', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qa h2 { color: #7089e3; }
+        .gamedev h2 { color: #ffb000; }
+
+        .section-title {
+            font-size: 1.1rem;
+            margin: 20px 0 12px;
+            color: #ffb000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 6px;
+            font-family: 'Source Code Pro', monospace;
+            text-transform: uppercase;
+        }
+
+        .gamedev .section-title {
+            color: #ffb000;
+        }
+
+        .job {
+            margin-bottom: 18px;
+        }
+
+        .job-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+
+        .job-title {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .qa .job-title { color: #7089e3; }
+        .gamedev .job-title { color: #ffb000; }
+
+        .job-company {
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+
+        .job-date {
+            color: #888;
+            font-size: 0.8rem;
+            font-family: 'Source Code Pro', monospace;
+        }
+
+        .job-desc {
+            list-style: none;
+            margin-top: 6px;
+            padding-left: 0;
+        }
+
+        .job-desc li {
+            padding: 3px 0 3px 18px;
+            position: relative;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .job-desc li::before {
+            content: ">";
+            position: absolute;
+            left: 0;
+            font-family: 'Source Code Pro', monospace;
+        }
+
+        .qa .job-desc li::before { color: #7089e3; }
+        .gamedev .job-desc li::before { color: #ffb000; }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .skill-tag {
+            background: rgba(22, 27, 51, 0.8);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ffb000;
+        }
+
+        .qa .skill-tag { border-color: rgba(112, 137, 227, 0.3); color: #7089e3; }
+        .gamedev .skill-tag { border-color: rgba(255, 176, 0, 0.3); color: #ffb000; }
+
+        .game-showcase {
+            background: #0a0a0a;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #ffb000;
+            text-align: center;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .game-card {
+            background: #161b33;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 176, 0, 0.3);
+        }
+
+        .game-card h4 {
+            color: #ffb000;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .game-card p {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            margin: 5px 5px 5px 0;
+            font-family: 'Source Code Pro', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: #7089e3;
+            color: #161b33;
+            border-color: #8a9eff;
+        }
+
+        .btn-primary:hover {
+            background: #8a9eff;
+            box-shadow: 0 0 15px rgba(112, 137, 227, 0.4);
+        }
+
+        .btn-secondary {
+            background: #ffb000;
+            color: #161b33;
+            border-color: #ffc033;
+        }
+
+        .btn-secondary:hover {
+            background: #ff8c00;
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #ffb000;
+            border: 1px solid #7089e3;
+        }
+
+        .gamedev .btn-outline { border-color: #ffb000; color: #ffb000; }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .cert-item {
+            display: inline-block;
+            background: linear-gradient(90deg, #7089e3, #4d7aff);
+            color: #161b33;
+            padding: 5px 14px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 5px 5px 0 0;
+            font-size: 0.8rem;
+            font-family: 'Source Code Pro', monospace;
+        }
+
+        .gamedev .cert-item {
+            background: linear-gradient(90deg, #ffb000, #ff8c00);
+            color: #161b33;
+        }
+
+        .highlight-stat {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            font-family: 'Source Code Pro', monospace;
+        }
+
+        .qa .stat-number { color: #7089e3; }
+        .gamedev .stat-number { color: #ffb000; }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        .footer-links {
+            margin-top: 30px;
+            padding: 25px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 176, 0, 0.2);
+            background: #161b33;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .footer-links h3 {
+            color: #ffb000;
+            margin-bottom: 20px;
+            font-family: 'Source Code Pro', monospace;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+        }
+
+        .footer-links-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .footer-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            background: rgba(22, 27, 51, 0.8);
+            border-radius: 40px;
+            text-decoration: none;
+            color: #ffb000;
+            font-size: 1rem;
+            font-weight: 500;
+            border: 1px solid;
+            transition: all 0.2s;
+            backdrop-filter: blur(5px);
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .footer-link.linkedin {
+            border-color: #7089e3;
+        }
+
+        .footer-link.linkedin:hover {
+            background: #7089e3;
+            color: #161b33;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(112, 137, 227, 0.3);
+        }
+
+        .footer-link.github {
+            border-color: #ffb000;
+        }
+
+        .footer-link.github:hover {
+            background: #ffb000;
+            color: #161b33;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(255, 176, 0, 0.3);
+        }
+
+        .footer-link.itch {
+            border-color: #ff8c00;
+        }
+
+        .footer-link.itch:hover {
+            background: #ff8c00;
+            color: #161b33;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(255, 140, 0, 0.3);
+        }
+
+        .footer-link.email {
+            border-color: #7089e3;
+        }
+
+        .footer-link.email:hover {
+            background: #7089e3;
+            color: #161b33;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(112, 137, 227, 0.3);
+        }
+
+        .footer-copyright {
+            margin-top: 25px;
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .footer-copyright a {
+            color: #888;
+            text-decoration: none;
+        }
+
+        .footer-copyright a:hover {
+            color: #ffb000;
+        }
+
+        [data-lang] { display: none; }
+        [data-lang].active { display: block; }
+        [data-lang].inline { display: none; }
+        [data-lang].inline.active { display: inline; }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .panel { min-width: 100%; }
+            .quick-links { gap: 8px; }
+            .quick-link { padding: 8px 14px; font-size: 0.85rem; }
+            .footer-link { padding: 10px 20px; min-width: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="language-selector">
+        <button class="lang-btn active" onclick="switchLanguage('es')">ES</button>
+        <button class="lang-btn" onclick="switchLanguage('en')">EN</button>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Martín Caro</h1>
+            <div class="contact-bar">
+                <span style="color: #ffb000;">📍 Buenos Aires, Argentina</span>
+            </div>
+            <div class="badge-container">
+                <span class="badge qa">ISTQB Certified</span>
+                <span class="badge gamedev">Game Quality Analyst</span>
+            </div>
+            
+            <div class="quick-links">
+                <a href="https://www.linkedin.com/in/martin-caroc" target="_blank" class="quick-link">LinkedIn</a>
+                <a href="https://github.com/martincaroc" target="_blank" class="quick-link">GitHub</a>
+                <a href="https://martincaroc.itch.io/" target="_blank" class="quick-link">itch.io</a>
+                <a href="#" class="quick-link email-link" data-email-b64="bWFydGluY2Fyb2NAdHV0YS5jb20=">Email</a>
+            </div>
+        </div>
+
+        <div class="split-container">
+            <!-- ===== PANEL QA ===== -->
+            <div class="panel qa">
+                <h2>QA Engineering</h2>
+                
+                <div class="highlight-stat">
+                    <div class="stat">
+                        <div class="stat-number">5+</div>
+                        <div class="stat-label" data-lang="es">Años experiencia</div>
+                        <div class="stat-label" data-lang="en">Years exp.</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label" data-lang="es">Empresas</div>
+                        <div class="stat-label" data-lang="en">Companies</div>
+                    </div>
+                </div>
+
+                <div class="section-title" data-lang="es">Experiencia Relevante</div>
+                <div class="section-title" data-lang="en">Relevant Experience</div>
+
+                <div class="job">
+                    <div class="job-header">
+                        <span class="job-title">QA Analyst</span>
+                        <span class="job-date">2024 – Presente</span>
+                    </div>
+                    <div class="job-company">Aconcagua Games · Remoto</div>
+                    <ul class="job-desc">
+                        <li data-lang="es">Implementación de MantisBT y TestLink para tracking</li>
+                        <li data-lang="en">Implemented MantisBT & TestLink for bug tracking</li>
+                        <li data-lang="es">Asistencia en diseño de juego y balance</li>
+                        <li data-lang="en">Assisted game design and balancing</li>
+                        <li data-lang="es">Transición de Kanban a Scrum con Trello</li>
+                        <li data-lang="en">Kanban to Scrum transition with Trello</li>
+                    </ul>
+                </div>
+
+                <div class="job">
+                    <div class="job-header">
+                        <span class="job-title">SSR QA Tester</span>
+                        <span class="job-date">2023 – 2024</span>
+                    </div>
+                    <div class="job-company">Trick Studio · Remoto</div>
+                    <ul class="job-desc">
+                        <li data-lang="es">Planes de prueba basados en FDD y User Stories</li>
+                        <li data-lang="en">Test plans based on FDD and User Stories</li>
+                        <li data-lang="es">Gestión de casos con TestRail</li>
+                        <li data-lang="en">Test case management with TestRail</li>
+                        <li data-lang="es">CI/CD con GitHub Actions (Android, iOS, Steam, WebGL)</li>
+                        <li data-lang="en">CI/CD with GitHub Actions (cross-platform)</li>
+                        <li data-lang="es">Validación de herramientas internas</li>
+                        <li data-lang="en">Internal tools validation</li>
+                    </ul>
+                </div>
+
+                <div class="job">
+                    <div class="job-header">
+                        <span class="job-title">Junior QA Tester</span>
+                        <span class="job-date">2020 – 2023</span>
+                    </div>
+                    <div class="job-company">Gameloft · Híbrido</div>
+                    <ul class="job-desc">
+                        <li data-lang="es">Testing funcional y de integración en Unity</li>
+                        <li data-lang="en">Functional & integration testing in Unity</li>
+                        <li data-lang="es">Migración de Excel a Airtable para bug tracking</li>
+                        <li data-lang="en">Migration from Excel to Airtable for QA</li>
+                        <li data-lang="es">Coordinación de esfuerzos con equipos externos</li>
+                        <li data-lang="en">Coordinated testing efforts with 3rd party teams</li>
+                    </ul>
+                </div>
+
+                <div class="section-title" data-lang="es">Herramientas Clave</div>
+                <div class="section-title" data-lang="en">Key Tools</div>
+                <div class="skill-tags">
+                    <span class="skill-tag">Postman</span>
+                    <span class="skill-tag">Unity Editor</span>
+                    <span class="skill-tag">GitHub Actions</span>
+                    <span class="skill-tag">Jenkins</span>
+                    <span class="skill-tag">TestRail</span>
+                    <span class="skill-tag">JIRA</span>
+                    <span class="skill-tag">MantisBT</span>
+                    <span class="skill-tag">Airtable</span>
+                    <span class="skill-tag">Qase</span>
+                    <span class="skill-tag">Confluence</span>
+                </div>
+
+                <div class="section-title" data-lang="es">Certificaciones</div>
+                <div class="section-title" data-lang="en">Certifications</div>
+                <div>
+                    <span class="cert-item">ISTQB FL</span>
+                    <span class="cert-item">Game QA (Image Campus)</span>
+                </div>
+            </div>
+
+            <!-- ===== PANEL GAME DEV ===== -->
+            <div class="panel gamedev">
+                <h2>Game Dev</h2>
+                
+                <div class="highlight-stat">
+                    <div class="stat">
+                        <div class="stat-number">3+</div>
+                        <div class="stat-label" data-lang="es">Años experiencia</div>
+                        <div class="stat-label" data-lang="en">Years exp.</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label" data-lang="es">Cursos/Diplomas</div>
+                        <div class="stat-label" data-lang="en">Courses/Diplomas</div>
+                    </div>
+                </div>
+
+                <div class="section-title" data-lang="es">Formación Destacada</div>
+                <div class="section-title" data-lang="en">Key Education</div>
+                <ul class="job-desc" style="margin-bottom:15px;">
+                    <li data-lang="es"><strong>Unreal Game Developer</strong> – Quark Academy (2023)</li>
+                    <li data-lang="en"><strong>Unreal Game Developer</strong> – Quark Academy (2023)</li>
+                    <li data-lang="es"><strong>Game Design</strong> – Image Campus (2022) | UTN FRBA (2021)</li>
+                    <li data-lang="en"><strong>Game Design</strong> – Image Campus (2022) | UTN FRBA (2021)</li>
+                    <li data-lang="es"><strong>Diplomado en Guión de Videojuegos</strong> – TECH Global University (2021)</li>
+                    <li data-lang="en"><strong>Diploma in Video Game Scriptwriting</strong> – TECH Global University (2021)</li>
+                    <li data-lang="es"><strong>Introducción a la Programación de Videojuegos</strong> – Image Campus (2020)</li>
+                    <li data-lang="en"><strong>Intro to Game Programming</strong> – Image Campus (2020)</li>
+                </ul>
+
+                <div class="section-title" data-lang="es">Motores Gráficos</div>
+                <div class="section-title" data-lang="en">Game Engines</div>
+                <div class="skill-tags">
+                    <span class="skill-tag">Godot</span>
+                    <span class="skill-tag">Unity</span>
+                    <span class="skill-tag">Unreal Engine</span>
+                    <span class="skill-tag">PICO-8</span>
+                    <span class="skill-tag">Love2D</span>
+                    <span class="skill-tag">Pygame</span>
+                </div>
+
+                <div class="game-showcase">
+                    <h3 style="color:#ffb000; margin-bottom:12px;" data-lang="es">Mis juegos en itch.io</h3>
+                    <h3 style="color:#ffb000; margin-bottom:12px;" data-lang="en">My games on itch.io</h3>
+                    <div class="game-grid">
+                        <div class="game-card">
+                            <h4>Platformer</h4>
+                            <p data-lang="es">Mi primer juego en Godot</p>
+                            <p data-lang="en">First Godot game</p>
+                        </div>
+                        <div class="game-card">
+                            <h4>Statera</h4>
+                            <p data-lang="es">Prototipo aventura</p>
+                            <p data-lang="en">Adventure prototype</p>
+                        </div>
+                        <div class="game-card">
+                            <h4>Visual Novel</h4>
+                            <p data-lang="es">Narrativa interactiva</p>
+                            <p data-lang="en">Interactive story</p>
+                        </div>
+                    </div>
+                    <a href="https://martincaroc.itch.io/" class="btn btn-secondary" style="margin-top:5px;">itch.io →</a>
+                </div>
+
+                <div class="section-title" data-lang="es">Herramientas Clave</div>
+                <div class="section-title" data-lang="en">Key Tools</div>
+                <div class="skill-tags">
+                    <span class="skill-tag">Git</span>
+                    <span class="skill-tag">Aseprite</span>
+                    <span class="skill-tag">Figma</span>
+                    <span class="skill-tag">Miro</span>
+                    <span class="skill-tag">OBS</span>
+                    <span class="skill-tag">C#</span>
+                    <span class="skill-tag">C++</span>
+                    <span class="skill-tag">GDScript</span>
+                </div>
+
+                <div class="section-title" data-lang="es">Certificaciones</div>
+                <div class="section-title" data-lang="en">Certifications</div>
+                <div>
+                    <span class="cert-item">Unreal Developer (Quark)</span>
+                    <span class="cert-item">Game Design (Image Campus)</span>
+                    <span class="cert-item">Guión de Videojuegos (TECH)</span>
+                    <span class="cert-item">Narrativa Visual (UTN)</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #161b33; border-radius: 12px; border-left: 4px solid #ffb000;">
+            <p style="color:#ffb000; font-style:italic; margin:0;" data-lang="es">
+                ✅ QA Analyst con 5+ años en game testing, ISTQB certified. Experiencia en API testing, CI/CD y cross-platform. 
+                Complemento con 3+ años en desarrollo indie (Godot, Unity, Unreal) y formación sólida en game design. 
+                Disponible para oportunidades en software factory o game studio.
+            </p>
+            <p style="color:#ffb000; font-style:italic; margin:0;" data-lang="en">
+                ✅ QA Analyst with 5+ years in game testing, ISTQB certified. Experienced in API testing, CI/CD and cross-platform. 
+                Complemented by 3+ years in indie development (Godot, Unity, Unreal) and solid game design education. 
+                Open to software factory or game studio roles.
+            </p>
+        </div>
+    </div>
+
+    <div class="footer-links">
+        <h3 data-lang="es">Contacto y redes</h3>
+        <h3 data-lang="en">Contact & Social</h3>
+        <div class="footer-links-grid">
+            <a href="https://www.linkedin.com/in/martin-caroc" target="_blank" class="footer-link linkedin">
+                LinkedIn
+            </a>
+            <a href="https://github.com/martincaroc" target="_blank" class="footer-link github">
+                GitHub
+            </a>
+            <a href="https://martincaroc.itch.io/" target="_blank" class="footer-link itch">
+                itch.io
+            </a>
+            <a href="#" class="footer-link email" data-email-b64="bWFydGluY2Fyb2NAdHV0YS5jb20=">
+                Email
+            </a>
+        </div>
+        <div class="footer-copyright">
+            <p>© 2024 Martín Caro — QA Analyst & Game Developer</p>
+            <p style="margin-top: 8px; font-size: 0.7rem; color: #ffb000;">
+                <span data-lang="es">📍 Buenos Aires, Argentina</span>
+                <span data-lang="en">📍 Buenos Aires, Argentina</span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function switchLanguage(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                if (el.getAttribute('data-lang') === lang) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+            
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('preferredLanguage') || 'es';
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                el.classList.toggle('active', el.getAttribute('data-lang') === savedLang);
+            });
+            document.querySelectorAll('.lang-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', (i === 0 && savedLang === 'es') || (i === 1 && savedLang === 'en'));
+            });
+            
+            document.querySelectorAll('[data-email-b64]').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const email = atob(this.dataset.emailB64);
+                    window.location.href = 'mailto:' + email;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
